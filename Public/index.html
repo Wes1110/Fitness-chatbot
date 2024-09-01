@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit Advisor - Benicia Fitness</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+        .content {
+            padding: 2rem;
+            text-align: center;
+        }
+        .message-box {
+            margin-top: 1rem;
+        }
+        .response-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            display: inline-block;
+            max-width: 80%;
+        }
+        .send-btn {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #888;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Fit Advisor</h1>
+    </header>
+    <div class="content">
+        <div class="message-box">
+            <input type="text" id="user-input" placeholder="Type your message here...">
+            <button id="send-btn" class="send-btn">Send</button>
+        </div>
+        <div id="response" class="response-box"></div>
+    </div>
+    <script>
+        const sendButton = document.getElementById('send-btn');
+        const userInput = document.getElementById('user-input');
+        const responseBox = document.getElementById('response');
+
+        sendButton.addEventListener('click', async () => {
+            const userText = userInput.value.trim();
+            if (!userText) {
+                responseBox.textContent = "Please enter a message.";
+                return;
+            }
+
+            const response = await fetch('/get-response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: userText })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                responseBox.textContent = `Bot says: ${data.bot}`;
+            } else {
+                responseBox.textContent = 'Error: Unable to get a response from the bot.';
+            }
+        });
+    </script>
+</body>
+</html>
