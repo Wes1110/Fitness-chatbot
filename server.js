@@ -26,7 +26,7 @@ app.post('/get-response', async (req, res) => {
                 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
             }
         });
-        console.log('API Response:', response.data); // Log the entire API response
+        console.log('API Response:', response.data);
         res.json({ bot: response.data.choices[0].message.content.trim() });
     } catch (error) {
         console.error('Error:', error.response ? error.response.data : error.message);
