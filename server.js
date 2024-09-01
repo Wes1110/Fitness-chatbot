@@ -3,11 +3,11 @@ const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;  // Use the port that Vercel or other deployment platforms provide
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Make sure URL-encoded data is properly parsed
-app.use(express.static('Public'));
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
+app.use(express.static('Public'));  // Serve static files from the "Public" directory
 
 app.post('/get-response', async (req, res) => {
     const prompt = req.body.prompt;
@@ -26,12 +26,17 @@ app.post('/get-response', async (req, res) => {
                 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
             }
         });
-        console.log('API Response:', response.data); // Log the entire API response
+        console.log('API Response:', response.data);  // Log the entire API response
         res.json({ bot: response.data.choices[0].message.content.trim() });
     } catch (error) {
         console.error('Error:', error.response ? error.response.data : error.message);
         res.status(500).json({ error: 'Error communicating with API' });
     }
+});
+
+// Fallback for all other routes, useful for handling 404
+app.get('*', (req, res) => {
+    res.status(404).send('404: NOT_FOUND');
 });
 
 app.listen(port, () => {
