@@ -7,7 +7,7 @@ const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('Public'));
+app.use(express.static('public')); // Use lowercase 'public' directory
 
 app.post('/get-response', async (req, res) => {
     const prompt = req.body.prompt;
